@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class BlockLass : MonoBehaviour
 	private const float X_SPEED = 1f;
 	
 	private Rigidbody _rigidbody;
-	private GameObject _block;
+	private Block _block;
 
 	// direction character is facing
 	private Vector3 facing = Vector3.back;
@@ -19,8 +20,7 @@ public class BlockLass : MonoBehaviour
 		_rigidbody = GetComponent<Rigidbody>();
 
 		//create block
-		_block = Instantiate(Resources.Load<GameObject>("Block"));
-		_block.SetActive(false);
+		_block = Instantiate(Resources.Load<GameObject>("Block")).GetComponent<Block>();
 	}
 
 	void Update()
@@ -54,21 +54,16 @@ public class BlockLass : MonoBehaviour
 		// Block power
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			if (_block.activeSelf)
+			if (_block.gameObject.activeSelf)
 			{
-				_block.SetActive(false);
+				_block.Despawn();
 			}
 			else
 			{
 				// set block position
-				Vector3 newPos = transform.position + facing * 2;
-				newPos.x = Mathf.Round(newPos.x);
-				newPos.y = Mathf.Round(newPos.y);
-				_block.transform.position = newPos;
+				Vector3 blockPos = transform.position + facing * 2;
 				
-				// show block
-				_block.SetActive(true);
-				
+				_block.Spawn(blockPos);
 			}
 		}
 	}
